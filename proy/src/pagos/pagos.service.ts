@@ -10,7 +10,7 @@ export class PagosService {
 
     async processPago(createPagoDto: CreatePagoDto): Promise<Pago> {
         
-        //*****DESCOMENTAR PARA PROBAR CAIDA
+        //*****DESCOMENTAR PARA PROBAR CAIDA********//
         //throw new NotFoundException(createPagoDto);
                 
         const pago = new this.pagoModel(createPagoDto);

@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Vuelo } from './interfaces/vuelos.interface';
 import { Reserva } from './interfaces/reserva.interface'; 
@@ -20,8 +20,34 @@ export class VuelosService {
       return vuelo.save();
     }
 
+    async buscarVuelosPorOrigenDestinoFecha(
+      origen: string,
+      destino: string,
+      fecha: string,
+    ): Promise<Vuelo[]> {
+
+      return this.vueloModel.find({
+        origen,
+        destino,
+        fecha        
+      }).exec();
+    }
+
+    async buscarVuelosPorId(
+      _id: ObjectId
+    ): Promise<Vuelo[]> {
+      
+      return this.vueloModel.find({
+        _id   
+      }).exec();
+            
+    }
+
     async reserveSeats(reservaVueloDTO: ReservaVueloDTO): Promise<Reserva> {
       
+      console.log(reservaVueloDTO);
+
+      /*
       const vuelo = await this.vueloModel.findOne({ vueloId: reservaVueloDTO.vueloId });
 
       if (!vuelo) {
@@ -30,7 +56,7 @@ export class VuelosService {
 
       vuelo.asientos = vuelo.asientos - reservaVueloDTO.asientos;
       await vuelo.save();
-    
+    */
       const reserva = new this.reservaModel({ ...reservaVueloDTO, status: 'reservado' });
       return reserva.save();
     }
@@ -53,10 +79,10 @@ export class VuelosService {
         throw new NotFoundException('Reservacion no encontrada');
       }
     
-      const vuelo = await this.vueloModel.findOne({vueloId: reserva.vueloId});
+      //const vuelo = await this.vueloModel.findOne({vueloId: reserva.vueloId});
       
-      vuelo.asientos = vuelo.asientos + reserva.asientos;
-      await vuelo.save();
+      //vuelo.asientos = vuelo.asientos + reserva.asientos;
+      //await vuelo.save();
     
       reserva.estado = 'cancelado';
       return reserva.save();

@@ -1,28 +1,37 @@
 import { Schema } from 'mongoose';
 export declare const VuelosSchema: Schema<any, import("mongoose").Model<any, any, any, any, any, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, {
-    vueloId: string;
     origen: string;
     destino: string;
-    fecha: Date;
-    precio: number;
-    reservado: number[];
+    avion: string;
+    fecha: string;
+    horaSalida: string;
+    horaLlegada: string;
+    duracion: string;
     asientos: number;
+    precio: number;
+    estado: "programado" | "cancelado" | "retrasado";
 }, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<{
-    vueloId: string;
     origen: string;
     destino: string;
-    fecha: Date;
-    precio: number;
-    reservado: number[];
+    avion: string;
+    fecha: string;
+    horaSalida: string;
+    horaLlegada: string;
+    duracion: string;
     asientos: number;
+    precio: number;
+    estado: "programado" | "cancelado" | "retrasado";
 }>> & import("mongoose").FlatRecord<{
-    vueloId: string;
     origen: string;
     destino: string;
-    fecha: Date;
-    precio: number;
-    reservado: number[];
+    avion: string;
+    fecha: string;
+    horaSalida: string;
+    horaLlegada: string;
+    duracion: string;
     asientos: number;
+    precio: number;
+    estado: "programado" | "cancelado" | "retrasado";
 }> & {
     _id: import("mongoose").Types.ObjectId;
 }>;

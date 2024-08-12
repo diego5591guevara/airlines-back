@@ -1,11 +1,14 @@
 import { Schema} from 'mongoose'
 
 export const VuelosSchema = new Schema({
-    vueloId: { type: String, required: true },
     origen: { type: String, required: true },
     destino: { type: String, required: true },
-    fecha: { type: Date, required: true },
+    avion: { type: String, required: true },
+    fecha: { type: String, required: true },
+    horaSalida: { type: String, required: true }, 
+    horaLlegada: { type: String, required: true },
+    duracion: { type: String, required: true },
     asientos: { type: Number, required: true },
     precio: { type: Number, required: true },
-    reservado: { type: [Number], default: [] },
+    estado: { type: String, enum: ['programado', 'cancelado', 'retrasado'], default: 'programado' },
 });

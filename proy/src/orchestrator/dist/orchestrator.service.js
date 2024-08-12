@@ -19,47 +19,62 @@ let OrchestratorService = class OrchestratorService {
     }
     async proceso(obj) {
         try {
-            const vuelo = await (0, rxjs_1.lastValueFrom)(this.httpService.get(`http://localhost:3001/vuelos/${obj.vueloId}`));
-            if (!vuelo.data) {
+            console.log(obj);
+            const vueloIda = await (0, rxjs_1.lastValueFrom)(this.httpService.get(`http://localhost:3001/vuelos/buscarVuelo?id=${obj.origen}`));
+            if (!vueloIda.data) {
                 throw new common_1.HttpException('Vuelo no encontrado', common_1.HttpStatus.NOT_FOUND);
             }
-            const cliente = this.httpService.get(`http://localhost:3002/clientes/${obj.clienteId}`);
-            const clienteValue = await (0, rxjs_1.lastValueFrom)(cliente);
-            if (!clienteValue.data) {
-                throw new common_1.HttpException('Cliente no encontrado', common_1.HttpStatus.NOT_FOUND);
+            console.log("paso 1");
+            const vueloVuelta = await (0, rxjs_1.lastValueFrom)(this.httpService.get(`http://localhost:3001/vuelos/buscarVuelo?id=${obj.destino}`));
+            if (!vueloVuelta.data) {
+                throw new common_1.HttpException('Vuelo no encontrado', common_1.HttpStatus.NOT_FOUND);
             }
-            const reserva = this.httpService.post('http://localhost:3001/vuelos/reserva', obj);
+            console.log("paso 2");
+            const respuestasPasajeros = [];
+            for (const pasajero of obj.pasajeros) {
+                pasajero.origenId = obj.origen;
+                pasajero.vueltaId = obj.destino;
+                pasajero.numero = pasajero.documento;
+                console.log(pasajero);
+                const pasajeros = await this.httpService.post('http://localhost:3005/pasajeros/create', pasajero).toPromise();
+                console.log("dataPas");
+                console.log(pasajeros.data);
+                respuestasPasajeros.push(pasajeros.data._id);
+            }
+            ;
+            console.log("paso 3");
+            console.log(respuestasPasajeros);
+            const objReserva = {
+                origen: obj.origen,
+                destino: obj.destino,
+                pasajero: respuestasPasajeros
+            };
+            const reserva = this.httpService.post('http://localhost:3001/vuelos/reserva', objReserva);
+            console.log(reserva);
+            console.log("paso 4");
             const reservaValue = await (0, rxjs_1.lastValueFrom)(reserva);
+            console.log("paso 4.q");
             if (!reservaValue.data) {
                 throw new common_1.HttpException('Reserva con error', common_1.HttpStatus.NOT_FOUND);
             }
+            console.log(reservaValue.data);
             const pago = this.httpService.post('http://localhost:3003/pagos', {
                 reservaId: reservaValue.data._id,
-                monto: vuelo.data.precio * obj.asientos
+                monto: obj.monto
             });
             const pagoValue = await (0, rxjs_1.lastValueFrom)(pago);
+            console.log("paso 5");
             return {
-                message: `Reserva y pago realizado con éxito. ID de Reserva: ${reservaValue.data._id}, Monto: ${pagoValue.data.monto}, Estado: ${pagoValue.data.estado}`,
-                vuelo: vuelo.data,
-                cliente: clienteValue.data,
+                message: `Reserva y pago realizado con éxito. ID de Reserva: ${reservaValue.data._id}, Estado: ${pagoValue.data.estado}`,
+                origen: vueloIda.data,
+                destino: vueloVuelta.data,
+                pasajeros: obj.pasajeros,
                 reserva: reservaValue.data,
                 pago: pagoValue.data,
                 response: "success"
             };
         }
         catch (error) {
-            if (error.response && error.response.config.url.includes('vuelos')) {
-                return {
-                    message: error.response.data.message,
-                    response: "error"
-                };
-            }
-            if (error.response && error.response.config.url.includes('clientes')) {
-                return {
-                    message: error.response.data.message,
-                    response: "error"
-                };
-            }
             if (error.response && error.response.config.url.includes('pagos')) {
                 const cancelado = this.httpService.post('http://localhost:3001/vuelos/cancel', { reservaId: error.response.data.reservaId });
                 await (0, rxjs_1.lastValueFrom)(cancelado);

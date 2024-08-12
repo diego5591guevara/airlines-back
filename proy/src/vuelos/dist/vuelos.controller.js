@@ -29,6 +29,12 @@ let VuelosController = class VuelosController {
             vuelo: vuelo
         });
     }
+    async buscar(origen, destino, fecha) {
+        return this.vuelosService.buscarVuelosPorOrigenDestinoFecha(origen, destino, fecha);
+    }
+    async buscarVuelo(_id) {
+        return this.vuelosService.buscarVuelosPorId(_id);
+    }
     async findAll() {
         return this.vuelosService.findAll();
     }
@@ -51,6 +57,22 @@ __decorate([
     __metadata("design:paramtypes", [Object, vuelos_dto_1.CreateVueloDTO]),
     __metadata("design:returntype", Promise)
 ], VuelosController.prototype, "create", null);
+__decorate([
+    (0, common_1.Get)('buscar'),
+    __param(0, (0, common_1.Query)('origen')),
+    __param(1, (0, common_1.Query)('destino')),
+    __param(2, (0, common_1.Query)('fecha')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:returntype", Promise)
+], VuelosController.prototype, "buscar", null);
+__decorate([
+    (0, common_1.Get)('buscarVuelo'),
+    __param(0, (0, common_1.Query)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], VuelosController.prototype, "buscarVuelo", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),

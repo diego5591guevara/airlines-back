@@ -1,8 +1,13 @@
 export class CreateVueloDTO {
-    readonly vueloId: string;
-    readonly origen: string;
-    readonly destino: string;
-    readonly fecha: Date;
-    readonly asientos: number;
-    readonly precio: number; 
-  }
+  readonly id?: string;
+  readonly origen: string;
+  readonly destino: string;
+  readonly avion: string;
+  readonly fecha: string;
+  readonly horaSalida: string;
+  readonly horaLlegada: string;
+  readonly duracion: string;
+  readonly asientos: number;
+  readonly precio: number;
+  readonly estado: string;
+}

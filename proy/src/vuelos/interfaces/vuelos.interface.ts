@@ -1,13 +1,15 @@
+import { Document, ObjectId} from 'mongoose';
 
-import { Document } from 'mongoose'
-
-export interface Vuelo extends Document{
-    readonly vueloId: string;
-    readonly origen: string;
-    readonly destino: string;
-    readonly fecha: Date;
-    asientos: number;
-    readonly precio: number; 
-    reservado: number[];
-  }
-
+export interface Vuelo extends Document {
+  _id: ObjectId;
+  origen: string;
+  destino: string;
+  avion: string;
+  fecha: string;
+  horaSalida: string;
+  horaLlegada: string;
+  duracion: string;
+  asientos: number;
+  precio: number;
+  estado: string;
+}

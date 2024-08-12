@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { Vuelo } from './interfaces/vuelos.interface';
 import { Reserva } from './interfaces/reserva.interface';
 import { CreateVueloDTO } from './dto/vuelos.dto';
@@ -8,6 +8,8 @@ export declare class VuelosService {
     private readonly reservaModel;
     constructor(vueloModel: Model<Vuelo>, reservaModel: Model<Reserva>);
     createVuelo(createVueloDTO: CreateVueloDTO): Promise<Vuelo>;
+    buscarVuelosPorOrigenDestinoFecha(origen: string, destino: string, fecha: string): Promise<Vuelo[]>;
+    buscarVuelosPorId(_id: ObjectId): Promise<Vuelo[]>;
     reserveSeats(reservaVueloDTO: ReservaVueloDTO): Promise<Reserva>;
     findVueloById(id: string): Promise<Vuelo>;
     cancelReserva(reservaId: string): Promise<Reserva>;

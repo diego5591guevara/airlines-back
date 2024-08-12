@@ -1,5 +1,5 @@
 export class ReservaVueloDTO {
-    readonly vueloId: string;
-    readonly clienteId: string;
-    readonly asientos: number;
+  readonly origen: string;  
+  readonly destino: string;
+  readonly pasajero: string[];
   }

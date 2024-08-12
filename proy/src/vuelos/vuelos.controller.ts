@@ -1,8 +1,10 @@
-import { Body, Controller, Get, Post, Res, HttpStatus, Param } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res, HttpStatus, Param, Query } from '@nestjs/common';
 import { CreateVueloDTO }  from './dto/vuelos.dto';
 import { ReservaVueloDTO }  from './dto/reserva.dto';
 import { CancelReservaDTO }  from './dto/cancelar.dto';
 import { VuelosService } from './vuelos.service';
+import { Vuelo } from 'interfaces/vuelos.interface';
+import { ObjectId } from 'mongoose';
 
 @Controller('vuelos')
 export class VuelosController {
@@ -19,6 +21,22 @@ export class VuelosController {
         })
     }
 
+    @Get('buscar')
+    async buscar(
+      @Query('origen') origen: string,
+      @Query('destino') destino: string,
+      @Query('fecha') fecha: string,
+    ): Promise<Vuelo[]> {  
+      return this.vuelosService.buscarVuelosPorOrigenDestinoFecha(origen, destino, fecha);
+    }
+    
+    @Get('buscarVuelo')
+    async buscarVuelo(
+      @Query('id') _id: ObjectId,
+    ): Promise<Vuelo[]> {  
+      return this.vuelosService.buscarVuelosPorId(_id);
+    }
+    
     @Get()
     async findAll() {
         return this.vuelosService.findAll();

@@ -25,13 +25,20 @@ let VuelosService = class VuelosService {
         const vuelo = new this.vueloModel(createVueloDTO);
         return vuelo.save();
     }
+    async buscarVuelosPorOrigenDestinoFecha(origen, destino, fecha) {
+        return this.vueloModel.find({
+            origen,
+            destino,
+            fecha
+        }).exec();
+    }
+    async buscarVuelosPorId(_id) {
+        return this.vueloModel.find({
+            _id
+        }).exec();
+    }
     async reserveSeats(reservaVueloDTO) {
-        const vuelo = await this.vueloModel.findOne({ vueloId: reservaVueloDTO.vueloId });
-        if (!vuelo) {
-            throw new common_1.NotFoundException('Vuelo no encontrado');
-        }
-        vuelo.asientos = vuelo.asientos - reservaVueloDTO.asientos;
-        await vuelo.save();
+        console.log(reservaVueloDTO);
         const reserva = new this.reservaModel({ ...reservaVueloDTO, status: 'reservado' });
         return reserva.save();
     }
@@ -47,9 +54,6 @@ let VuelosService = class VuelosService {
         if (!reserva) {
             throw new common_1.NotFoundException('Reservacion no encontrada');
         }
-        const vuelo = await this.vueloModel.findOne({ vueloId: reserva.vueloId });
-        vuelo.asientos = vuelo.asientos + reserva.asientos;
-        await vuelo.save();
         reserva.estado = 'cancelado';
         return reserva.save();
     }
